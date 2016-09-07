@@ -1,0 +1,66 @@
+\section{Generic Path-sensitive Callback Model}\label{transition-model}
+In this section, we introduce the GPC model and define related conceptions. 
+
+\textbf{Definition 1.} A \textit{Generic Path-sensitive Callback Model} (GPC) is a tuple
+\begin{equation}
+GPC = (N, E, C)
+\end{equation}
+%consisting of the followings.
+\begin{itemize}
+\item \textit{N} is the set of nodes, representing the set of callbacks. \textit{N} contains two parts and is denoted as $ N = N_{l}\cup N_{n}$.  $ N_{l}$ refers to the set of lifecycle callbacks and can be divided into two parts, $N_{l}= N_{lfc}\cup N_{aux}$, in which $N_{lfc}$ and $N_{aux}$ refer to the set of system and auxiliary lifecycle. Auxiliary node set $N_{aux}$ is added into lifecycle modelling for auxiliary analysis. $N_{aux}$ contains three defined callbacks \textit{ActiveStart}, \textit{ActiveEnd} and \textit{Terminal}, denoted as $N_{aux} = \{N_{as}, N_{ae}, N_{tm} \} $. Correspondingly, $N_{n}$ refers to the set of non-lifecycle callbacks. $N_{n} = N_{sys}\cup N_{gui}$, in which $N_{sys}$ and $N_{gui}$ refer to the set of system and \textit{GUI} callbacks. We denote the nodes of component \textit{x} as $N^{x}$, the set of start node as $N_{st}$ and the set of restart node as $N_{re}$. 
+\item \textit{E} is the set of edges that represents the invocation sequence between two nodes. \textit{E} can be generated via three ways: lifecycle event, register action and inter-component jumping. We denote them as $E = E_{l}\cup E_{r}\cup E_{j}$, in which $ E_{l} = N_{l} \times N_{l}$ , $ E_{r}  = (N_{l} \times N_{n}) \cup (N_{n} \times N_{l}) \cup (N_{n} \times N_{n})$ and $ E_{j} = E_{j-a}\cup E_{j-s} = (N_{tm}^{A} \times N_{st}^{B}) \cup (N_{tm}^{B}\times N_{re}^{A})$, where $E_{j-a}$ refers to the inter-component edges between activities; $E_{j-s}$ refers to the ones involving service component, $~^A$ and $~^B$ refers to any two components.
+\item \textit{C} is the set of conditions for nodes, $C = \{( r, f, e )| r\in Ivr, f\in \Lambda, e\in Ive\}$ where \textit{Ivr} refers to the set of invoker callbacks; \textit{Ive} is the set of invokee callbacks; $\Lambda$ is the set of conditions where each element is a boolean expression with variables. Formally, $\forall f\in \Lambda, f : Val \rightarrow \{True, False\}$, where \textit{Val} is the assigned values of variables.
+\end{itemize}
+
+\textbf{Definition 2.} \textit{Register Abstraction} (\textit{RA}) is the set of actions for register (\textit{FRA}) and unregister (\textit{BRA}) of the non-lifecycle callbacks, which is denoted as a set of tuple
+\begin{equation}
+RA = \{( r, g, e) |r\in Ivr, g\in \Gamma, e\in Ive\}
+\end{equation}
+%consisting of the following elements:
+\begin{itemize}
+\item \textit{Ivr} and \textit{Ive} refer to the set of invoker and invokee callbacks respectively.
+\item $\Gamma$ refers to set of register (for \textit{FRA}) and unregister (for \textit{BRA}) actions. Each element in $\Gamma$ contains two parts: object and API, namely $\forall g \in \Gamma, g = (obj, API)$, meaning that the object conducts (un)register action and the API is employed by the object.
+\end{itemize}
+
+Take the motivation example for illustration. The \textit{FRA} modelling the register action in line $12$, is \texttt{(onResume,\linebreak
+(locationManager,requestLocationUpdates), onLoc-\linebreak ationChanged)}; the \textit{BRA} for the unregister action in line $19$, is \texttt{(onPause,(locationManager,removeUpdates), onLocationChanged)}.
+
+
+
+\textbf{Definition 3.} \textit{Jumping Abstraction} (\textit{JA}) is the action that launches (\textit{FJA}) and terminates (\textit{BJA}) new component \textit{B} from current running component \textit{A}, denoted as a set of tuple 
+\begin{equation}
+JA = \{( r, u, e )| r\in Ivr^{A}, u\in \Upsilon, e\in Ive^{B}\}
+\end{equation}
+%consisting of the following elements:
+\begin{itemize}
+\item For \textit{FJA}, $Ivr^{A}$ and $Ive^{B}$ refer to the launcher callback in \textit{A} and the launched callback in \textit{B} respectively.
+Correspondingly, for \textit{BJA}, \item $Ivr^{A}$ refers to the callback in \textit{A} for terminating \textit{B}; and $Ivr^{B}$ refers to the callback in \textit{B} terminated by \textit{A}.
+\item $ \Upsilon$ refers to the set of jumping actions in the invoker component (i.e., \textit{A}). Similar as \textit{RA}, each element in $\Upsilon$ also contains the object and API, namely $\forall u\in \Upsilon, u = (obj, API)$, which refers to the jumping object and employed API.
+\end{itemize}
+
+In the motivation example, as for the jumping action in line $29$, the jumping abstraction can be denoted as \texttt{(ShareMyPosition\$2}$::$\texttt{onClick,(ShareMyPosition.\linebreak this,startActivity),share}$::$\texttt{onCreate)}. Note that \texttt{ShareMyPosition\$2} is the inner anonymous class of \texttt{ShareMyPosition}, which contains the invoker \texttt{onClick}.
+
+
+The \textit{RA}, \textit{JA} and the lifecycle flow set (\textit{LF}) are three key types of connections between callback nodes. The \textit{GPC} edges are generated by identifying these flow sets. The relation between the defined connections and edges are:
+ $RA$ mapping to  $E_{r}$,
+ $JA$ mapping to  $E_{j}$, and
+ $LF$ mapping to  $E_{l}$.
+
+\textbf{Definition 4.} \textit{Event} is the situation that triggers the invocation of callback, which is denoted as a set of tuple
+\begin{equation}
+Event = \{( t, a, o )| t\in Tgr, a\in Act, o\in Obj)\}
+\end{equation}
+%consisting of the following elements:
+\begin{itemize}
+\item \textit{Tgr} refers to the set of objects that conduct a trigger action. An element in \textit{Tgr} has two selectable items: \textit{user} and \textit{system}.
+\item \textit{Act} refers to the set of trigger actions. Typical elements in \textit{Act} include \textit{Click}, \textit{Touch}, \textit{LocationChanged}, etc.
+\item \textit{Obj} refers to the set of triggered object. Typical elemenents in \textit{Obj} include instances of \textit{Button}, \textit{View}, \textit{LocationManager}, etc.
+\end{itemize}
+
+\textbf{Definition 5.} \textit{HiddenNodes} represents the unimplemented lifecycle callbacks in the target app. The \textit{hiddenNodes} set can be computed by the formula
+ $HiddenNodes = ELG.nodes - N_{l} $, where \textit{ELG.nodes} is the entire lifecycle nodes.
+
+\textbf{Definition 6.} \textit{Active Area} is a lifecycle interval where the non-lifecycle callbacks are normally invoked.
+
+The active area is quite different in activity and service. For activity, the active area is located between \texttt{onResume} and \texttt{onPause}; for service, it is located between \texttt{onStartCommand} and \texttt{onDestroy}, or between \texttt{onBind} and \texttt{onUnbind} (for service with \texttt{onbind} callback). The auxiliary nodes \textit{onActiveStart} and \textit{onActiveEnd} are initialized to identify the active area. For instance, a partial picture of activity's lifecycle model is  $\texttt{onResume}\rightarrow \texttt{onActiveStart}\rightarrow \texttt{onActiveEnd}\rightarrow \texttt{onPause}$.
+We do not consider the extreme situation where non-lifecycle callbacks are invoked outside the \textit{Active Area}.

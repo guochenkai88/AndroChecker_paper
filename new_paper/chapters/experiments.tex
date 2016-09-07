@@ -1,0 +1,153 @@
+\section{Empirical Evaluation}
+In this section, we present the empirical evaluation of our approach. First we present the evaluation results of 20 real-world apps used in prior works\cite{new2015static, new2015window}. Considering AndroChecker is able to directly analyze the real-world apps, we download these apps in Google Play, which is quite different from the prior open source version. Then, we study three typical cases to illustrate results of \textit{PSI} in detail. Our system is implemented using AndroGuard\cite{new2013androguard} framework, and consists of 4,400 lines of Python code. The input of our system is the \textit{apk} file. The output is the set of nodes and edges, path condition set, the nodes of parallel slice and related statistical results.
+
+\begin{table*}[!t]
+\centering
+\begin{threeparttable}[b]
+\caption{Evaluation results for GPC model construction algorithms.} 
+\newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
+\footnotesize
+
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline 
+\multirow{2}{*}{Name} &\multicolumn{3}{|c|}{Application} & \multicolumn{5}{c|}{PII} & \multicolumn{3}{c|}{CBC} & \multicolumn{3}{c|}{PSI}  &\multicolumn{2}{c|}{Time(sec)}\\
+\cline{2-17}
+& A & S & B &      $N_{l}$ & $E_{l}$ & $hN$ &  $N_{n}$ & $E_{r}$&     $E_{j-a}$ & $E_{j-s}$ & NSlc&   N & E & Cons&  PT & MT \\ 
+\hline 
+\hline 
+APV & 4 & 0 & 0 &    26& 41 & 18 & 31 & 62       &9 & 0 &0 &    57 & 112 & 6     & 9 & 14\\ 
+\hline 
+Astrid &  57 & 16 & 27 &    304& 400 & 329 & 118 & 236      & 8 & 0 &0 &    422 & 725 & 15    & 117 & 125\\ 
+\hline 
+BarcodeScanner & 9 & 0 & 1 &    50& 84 & 44 & 16 & 32       &4 & 0 &0 &    66 & 120 & 3    & 18 & 38\\ 
+\hline 
+Beem &  13 &1 & 7 &    97& 193 & 49 & 28 & 56       &18 & 2 &- &    125 & 269 & 4    & 43 & 63\\ 
+
+\hline 
+ConnectBot & 11 & 1 & 1 &    76& 114 & 51 & 49 & 98       &9 & 1 &- &    125 & 222 & 17    & 47 & 62\\ 
+\hline 
+FBReader & 9 & 9 & 9 &    86& 110 & 52 & 29 & 58       &1 & 2 &- &    115 & 171 & 12    & 128 & 141\\ 
+\hline 
+K9 & 32 & 9 & 8 &    196& 246 & 177 & 154 & 308       &24 & 4 &- &    350 & 582 & 11    & 66 & 97\\ 
+\hline 
+KeePassDroid & 24 & 1 & 2 &    115& 144 & 138 & 36 & 72       &6 & 2 &4 &    151 & 224 & 16    & 11 & 18\\ 
+\hline 
+Mileage & 19 & 13 & 0 &    176& 209 & 98 & 79 & 158       &3 & 8 &40 &    255 & 378 & 11    & 332 & 236\\ 
+\hline 
+MyTracks & 7 & 1 & 1 &    42& 64 & 37 & 41 & 82       &5 & 2 &9 &    83 & 153 & 3    & 23 & 35\\ 
+\hline 
+NotePad & 1 & 0 & 0 &    6& 10 & 4 & 1 & 2       &0 & 0 &0 &    6 & 12 & 0    & 19 & 23\\ 
+\hline 
+NPR & 31 & 13 & 51 &    235& 370 & 153 & 217 & 434       &10 & 19 &- &    452 & 827 & 32    & 124 & 139\\ 
+\hline 
+OpenManager & 53 & 16 & 5 &    321& 596 & 272 & 272 & 544       &75 & 8 &- &    593 & 1223 & 1    & 119 & 121\\ 
+\hline 
+OpenSudoku & 10 & 0 & 0 &    62& 88 & 49 & 39 & 78       &14 & 0 &0 &    101 & 180 & 6    & 3 & 5\\ 
+\hline 
+SipDroid & 21 & 3 & 16 &    127& 203 & 106 & 48 & 96       &14 & 7 &16 &    175 & 312 & 10    & 15 & 26\\ 
+\hline 
+SuperGenPass & 2 & 0 & 1 &    11& 19 & 10 & 18 & 36       &1 & 0 &0 &    29 & 56 & 0    & 5 & 6\\ 
+\hline 
+TippyTipper & 83 & 11 & 102 &    536& 848 & 359 & 373 & 746       &362 & 127 &817 &    909 & 2083 & 58    & 251 & 376\\ 
+\hline 
+VLC & 24 & 11 & 11 &    189& 248 & 112 & 211 & 422       &23 & 6 &15 &    400 & 699 & 10    & 99 & 113\\ 
+\hline 
+VuDroid & 5 & 0 & 0 &    22& 30 & 30 & 4 & 8       &0 & 0 &0 &    26 & 38 & 0    & 1 & 2\\ 
+\hline 
+XBMC & 3 & 0 & 0 &    11& 15 & 19 & 0 & 0       &2 & 0 &0 &    11 & 17 & 0    & 0.1 & 0.1\\ 
+\hline
+\end{tabular}
+%\begin{tablenotes}
+    %\item [1] 
+  % \end{tablenotes}
+\label{tb2: experiment1}  
+\end{threeparttable}
+\end{table*}
+
+
+% Our system is available in website.
+\subsection{Construction GPC model}
+Table \ref{tb2: experiment1} shows the evaluation results for each stage of analysis. Column "Application" shows the component sizes, where "A","S" and "B" represent the number of activity, service and broadcast receiver, respectively. As described in Section \ref{background}, broadcast receiver is regarded as non-lifecycle callback listener. Therefore its callbacks are added into $N_{n}$, and related inner-component edges are added into $E_{r}$.
+
+Column \textit{PII} shows the results of Algorithm \ref{fig:alg1}, in which the inner component modelling is constructed. Five indicators are presented in this stage: lifecycle nodes $N_{l}$, lifecycle edges $E_{l}$, hidden nodes $hN$, non-lifecycle nodes $N_{n}$ and register edges $E_{r}$. On the whole, the complexity of \textit{PII} is closely related to the component size. The number of edges are more than corresponding nodes because each node at least has a pair of incoming and outgoing, except the start and terminal nodes. Normally, the number of $E_{r}$ should be twice as many as $N_{n}$, because all the $N_{n}$ are located between \textit{onActiveStart} and \textit{onActiveEnd} with two new edges added. This relationship is based on the assumption that each non-lifecycle callbacks are invoked in the \textit{active area}, and this assumption simplifies the model complexity. Another relationship between component sizes and lifecycle nodes is reflected in the formula $N_{l} + hN = A*10 + S*6 $ or $ N_{l} + hN = A*10 + S*7$. The number of lifecycle callbacks for a component (activity and service) is fixed. For activity, the number is 10, which includes 7 regular callbacks and 3 auxiliary callbacks. For service, the number in binding mode is 7 (4 regular callbacks and 3 auxiliary callbacks), and the number in starting mode is 6 (3 regular callbacks and 3 auxiliary callbacks). However, since some callbacks are invoked along with the \texttt{onCreate} (e.g., onCreateDialog which is adopted in the motivation example), we treat them as \texttt{onCreate} lifecycle nodes. As a result, the $N_{l} + hN$ are more than $A*10 + S*7$ in some apps, e.g., \textit{APV}.
+
+Column \textit{CBC} shows the results of Algorithm \ref{fig:alg2}, in which the inter component connections are built. The \textit{CBC} includes three indicators: $E_{j-a}$, $E_{j-s}$ and $NSlc$. $E_{j-a}$ represents the number of inter-component edges between activities; $E_{j-s}$ is the number of inter-component edges involving service; $NSlc$ calculates the sum of parallel slice nodes. Normally, each activity and service should be launched through other component. Therefore the number of $E_{j-a}$ and $E_{j-s}$ should be similar to \textit{A} and \textit{S} respectively. However, the $E_{j-a}$ in some apps (e.g., \textit{Astrid} and \textit{NPR}) has a large gap to the expectation in Table \ref{tb2: experiment1}. This is caused by three reasons: \textcircled{1} activities launched by other apps can not be used to generate edges. \textcircled{2} activities and services launched by implicit intents can not be recognized. \textcircled{3} context-sensitive structure can not be handled, e.g., a loop structure launches multiple services. For $NSlc$ column, "-" represents that the parallel slice can not be counted; it exists in the scenario that a service is not terminated by the activity that launches it.
+
+Column \textit{PSI} shows the stage of Algorithm \ref{fig:alg3}, in which path-sensitive conditions are generated. We present the total nodes $N$ and total edges $E$ in this stage. From Table \ref{tb2: experiment1}, two formulas can be observed, which are $N = N_{l} + N_{n}$ and $E = E_{l} + E_{r} + E_{j-a} + E_{j-s}$. Column $Cons$ represents the path sensitive condition number of callback flow in each app. As mentioned in Algorithm \ref{fig:alg3}, currently AndroChecker only supports inner-procedural conditions traversal. As a result, the conditions residing out of the callback holder method would not be analyzed. 
+
+We omit the results of marked edges (mentioned in Section \ref{jumpConfusion}) since they are the same as $E_{j-a}$. Column \textit{Time} shows the time cost of our approach. It includes two parts: parsing time (\textit{PT}) and modelling time (\textit{MT}). Since AndroChecker is to handle \textit{apk} file, the process of reverse engineering consumes significant time cost. Yet this part of work is done by AndroGuard, which is not our contribution. On the whole, the number of \textit{PT} and \textit{MT} are related to the components' size. 
+
+\begin{table*}[!t]
+\centering
+\begin{threeparttable}[b]
+\caption{Example path sensitive conditions in studied cases. } 
+\newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
+\footnotesize
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline 
+Name &  PSC & Num & TranToJAVA & FP\\
+\hline 
+\hline 
+\multirow{6}{*}{Beem }& \multirow{2}{6.3cm}{if-eq\{SharedPreferences;$\rightarrow$getBoolean (String;Z)Z, 
+String;$\rightarrow$equals(PARA;)Z\} } & \multirow{2}{*}{2} & \multirow{2}{4cm}{if(SharedPreferences.getBoolean(String b, True) \&\& b.equals(PARA))} & \multirow{2}{*}{0}\\
+&&&&\\
+\cline{2-5}
+ & \multirow{2}{6.3cm}{if-eq\{AsyncTask;$\rightarrow$getStatus()AsyncTask \$Status;,GLOBAL\}}  &\multirow{2}{*}{1} & \multirow{2}{*}{if(AsyncTask.getStatus==GLOBAL)}& \multirow{2}{*}{0}\\
+
+&&&&\\
+ \cline{2-5}
+  & \multirow{2}{6.3cm}{if-eq\{ChangeStatus;$\rightarrow$access\$1400(ChangeStatus;) Landroid/widget/Button;\}}  & \multirow{2}{*}{1} & \multirow{2}{*}{if(SharedPreferences.getBoolean()}& \multirow{2}{*}{1}\\
+  &&&&\\
+\hline 
+\multirow{2}{*}{MyTracks}  &if-eq\{Utilities;$\rightarrow$isGpsOn(Context;)Z\} & 2 &if(Utilities.isGpsOn) & 1\\
+\cline{2-5} 
+ &if-ne\{GooglePlayServicesUtil;$\rightarrow$a(Context; I)String;\} & 1 & if(GooglePlayServicesUtil.a) & 0\\
+\hline 
+\multirow{3}{*}{OpenSudoku}  & if-ne\{InputMethod;$\rightarrow$isInputMethodViewCreated()Z'\}  & 1& if(!InputMethod.isInputMethodViewCreated())& 0\\
+\cline{2-5}
+  & if-eq \{File;$\rightarrow$isDirectory()Z, File;$\rightarrow$isFile()Z\} &1& if(File.isDirectory() \&\& File.isFile()) & 1\\
+\cline{2-5}
+   & if-ne \{Iterator;$\rightarrow$hasNext()Z\}& 4& if(!Iterator.hasNext())  & 0\\
+\hline 
+\end{tabular}
+%\begin{tablenotes}
+    %\item [1] 
+ %  \end{tablenotes}
+\label{tb2: experiment2}  
+\end{threeparttable}
+\end{table*}
+
+\subsection{Path Sensitive Conditions (PSC) Discussions}
+
+For further understanding how our modelling supports the \textit{PSC} checking, we study the \textit{PSC} results on three typical apps combined with manual analysis. Table \ref{tb2: experiment2} shows the detailed results, where the column \textit{PSC} represents the simplified \textit{PSC} results; column \textit{Num} shows the times a \textit{PSC} appears;  column \textit{TranToJAVA} presents the translated JAVA code from the \textit{PSC} results; and column \textit{FP} shows the false positive number in \textit{Num}. Due to the limitation of space, we combine the variable defining and using together in \textit{TranToJAVA}. E.g., for \texttt{Object c ; b==c;}, we simplified as \texttt{b==Object c;}. 
+
+\subsubsection{Beem}
+\textit{Beem} provides a full featured and easy to use XMPP client on Android. As shown in Table \ref{tb2: experiment1}, app \textit{Beem} contains four \textit{PSC}s. Three of them are designed to constrain unregister actions (Definition 2), and the last one is used to constrain jumping actions (Definition 2). The unregister and jumping actions include \texttt{Button.setOnClickListener}, \texttt{View.setOnCreateContextMenuListener} and \texttt{Context.bindService}. To verify the results in Table \ref{tb2: experiment2}, we conduct a manual analysis.  After that, the real conditions can be concluded as follows: \textcircled{1} \texttt{if ( SharedPreferences paramSharedPreferences.getBoolean("use\_auto\_awa}  \\
+\texttt{y", false) \&\& "use\_auto\_away".equals(paramStrin}\\
+\texttt{g) )}; \textcircled{2} \texttt{if(LoginAnim.this.mTask.getStatus()==Async}\\
+\texttt{Task.Status.PENDING)}; \textcircled{3} \textit{FP}. For  \textcircled{1} and \textcircled{2}, the conditions are abstracted successfully. As for \textcircled{3}, the jumping action \texttt{bindService} is directly contained by \texttt{onResume}, which indicates \textcircled{3} is an \textit{FP}. The reason is that the back traversal of AndroChecker can not correctly identify the loop structure. In detail, AndroChecker would treat \texttt{while()\{\} bindService;} as \texttt{while()\{bindService;\}}. Currently, in the byte codes generated by AndroGuard, distinguishing the two structures is intractable. This is also a critical improvement of future direction.
+
+\subsubsection{MyTracks}
+\textit{MyTracks} helps travellers to look for a way to keep track of places that they have already been to. Three \textit{PSC}s are detected in \textit{MyTracks}.  All the \textit{PSC}s are designed to constrain register actions. The register actions include \texttt{LocationManager.requestLocationUpdates } and \texttt{Button.setOnClickListener}. By manual analysis, the real \textit{PSC}s can be abstracted as  \textcircled{1} \texttt{if(Utilities.isGpsOn(getApplicationContext()))}, \textcircled{2} \textit{FP}, \textcircled{3} \texttt{if (GooglePlayServicesUtil.a(localContext,}\\
+ \texttt{i).str1!=null)}. For  \textcircled{1} the real \textit{PSC} is successfully matched as Table \ref{tb2: experiment2}. For \textcircled{2} the register action is directly contained by \textit{onCreate}, and the reason of \textit{FP} is the same as \textit{Beem}. For \textcircled{3}, the PSC abstracted by our approach lacks the variable \textit{str1}. This is because \textit{str1} is an attribute of \textit{GooglePlayServicesUtil.a},  which can not be recognized by AndroChecker.
+
+\subsubsection{OpenSudoku}
+\textit{OpenSudoku} is an open source sudoku game. AndroChecker detects six \textit{PSC}s in \textit{OpenSudoku}. Five of them are designed to constrain register actions, and the last one is designed to constrain jumping actions. The register and jumping actions contain \texttt{Button.setOnClickListener} and \texttt{Context.startActivity}. Through manual analysis, the real \textit{PSC}s can be abstracted as  \textcircled{1} \texttt{if(!(InputMethod).isInputMethodViewCreated())}, \textcircled{2} \textit{FP}, \textcircled{3} \texttt{if(!Iterator.hasNext())}.
+The \textit{PSC}  \textcircled{1} and \textcircled{3} are successfully detected by AndroChecker, and they have the same semantic with the corresponding items in Table \ref{tb2: experiment2}. As \textit{MyTracks} and \textit{Beem}, the \textit{FP} occurs because the loop obstacle.
+
+
+%Note that the $!$ in 1) and 3) is reflected in the Table \ref{tb2: experiment2}, because it is related to the operator of byte code. 
+
+
+
+ 
+
+
+%In its ten activities, seven of them contains register actions, and six of them contains jumping actions.  As shown in Table \ref{tb2: experiment1}, AndroChecker checks six valid path sensitive conditions. Four \textit{PSC}s are contained in class \texttt{IMPopupDialog}, and one condition is in class \texttt{IMControlPanelActivity}. The register actions of these five are \texttt{Button.setOnClickListener}s. The rest one is in \texttt{FileListActivity\$3}, whose register action is inter component jumping \texttt{startActivity}. Table ** shows the typical example for one of the \texttt{setOnClickListener}. The shown condition means the register action is under the condition of "if "
+  
+
+
+
+
+
