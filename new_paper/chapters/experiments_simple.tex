@@ -1,5 +1,5 @@
 \section{Empirical Evaluation}
-We implemented the method in a tool -- AndroChecker, which is built based on AndroGuard~\cite{new2013androguard} framework, and consists of 4,400 lines of Python code. The input of our tool is the \textit{apk} file. The output is the set of nodes and edges, path condition set, the nodes of parallel slice and related statistical results.
+We implemented the method in a prototype tool -- AndroChecker, which is built based on AndroGuard~\cite{new2013androguard} framework, and consists of 4,400 lines of Python code. The input of our tool is the \textit{apk} file. The output is the set of nodes and edges, path condition set, the nodes of parallel slice and related statistical results.
 %In this section, we present the empirical evaluation of our approach. First we present
 We perform evaluation on 20 real-world apps downloaded from in Google Play, which are used in prior works~\cite{new2015static, new2015window}. %Considering AndroChecker is able to directly analyze the real-world apps, 
 %We download these apps in Google Play, which is quite different from the prior open source version. 
@@ -77,7 +77,7 @@ Column \textit{PII} shows the results of the inner component model, including: l
 %
 Column \textit{CBC} shows the results of the inter component connections, including: the number of inter-component edges between activities $E_{j-a}$, the number of inter-component edges involving service $E_{j-s}$ and the sum of parallel slice nodes $NSlc$. %Normally, each activity and service should be launched through other component. Therefore the number of $E_{j-a}$ and $E_{j-s}$ should be similar to \textit{A} and \textit{S} respectively. However, the $E_{j-a}$ in some apps (e.g., \textit{Astrid} and \textit{NPR}) has a large gap to the expectation in Table \ref{tb2: experiment1}. This is caused by three reasons: \textcircled{1} activities launched by other apps can not be used to generate edges. \textcircled{2} activities and services launched by implicit intents can not be recognized. \textcircled{3} context-sensitive structure can not be handled, e.g., a loop structure launches multiple services. For $NSlc$ column, "-" represents that the parallel slice can not be counted; it exists in the scenario that a service is not terminated by the activity that launches it.
 %
-Column \textit{PSI} shows the result of path-sensitive conditions. We present the total nodes $N$ and total edges $E$ in this stage. From Table \ref{tb2: experiment1}, two formulas can be observed, which are $N = N_{l} + N_{n}$ and $E = E_{l} + E_{r} + E_{j-a} + E_{j-s}$. Column $Cons$ represents the path sensitive condition number of callback flow in each app. As mentioned earlier, currently AndroChecker only supports inner-procedural conditions traversal. As a result, the conditions residing out of the callback holder method would not be analyzed. 
+Column \textit{PSI} shows the result of path-sensitive conditions. We present the total nodes $N$ and total edges $E$ in this stage. From Table \ref{tb2: experiment1}, two formulas can be observed, which are $N = N_{l} + N_{n}$ and $E = E_{l} + E_{r} + E_{j-a} + E_{j-s}$. Column $Cons$ represents the path sensitive condition number of callback flow in each app. As mentioned earlier, currently AndroChecker only supports inner-procedural conditions traversal. So the conditions residing out of the callback holder method would not be analyzed. 
 
 We omit the results of marked edges (mentioned in Section \ref{jumpConfusion}) since they are the same as $E_{j-a}$. Column \textit{Time} shows the time cost of our approach. It includes two parts: parsing time (\textit{PT}) and modelling time (\textit{MT}). Since AndroChecker is to handle \textit{apk} file, the process of reverse engineering consumes significant time cost. Yet this part of work is done by AndroGuard, which is not our contribution. On the whole, the number of \textit{PT} and \textit{MT} are related to the components' size. 
 
@@ -126,7 +126,7 @@ String;$\rightarrow$equals(PARA;)Z\} } & \multirow{2}{*}{2}  & \multirow{2}{*}{0
 
 We further manually study the \textit{PSC} results on three typical apps as Table \ref{tb2: experiment2}, where the column \textit{PSC} represents the simplified \textit{PSC} results; column \textit{N} shows the times a \textit{PSC} appears;  
 %column \textit{TranToJAVA} presents the translated JAVA code from the \textit{PSC} results; 
-and column \textit{F} shows the false positive number in \textit{N}. 
+and column \textit{F} shows the false positive in \textit{N}. 
 %Due to the limitation of space, we combine the variable defining and using together in \textit{TranToJAVA}. E.g., for \texttt{Object c ; b==c;}, we simplified as \texttt{b==Object c;}. 
 
 \subsubsection{Beem}
@@ -135,7 +135,7 @@ and column \textit{F} shows the false positive number in \textit{N}.
 The real conditions can be concluded as follows: \textcircled{1} \texttt{if ( SharedPreferences paramSharedPreferences.getBoolean("use\_auto\_awa}  \\
 \texttt{y", false) \&\& "use\_auto\_away".equals(paramStrin}\\
 \texttt{g) )}; \textcircled{2} \texttt{if(LoginAnim.this.mTask.getStatus()==Async}\\
-\texttt{Task.Status.PENDING)}; \textcircled{3} \textit{FP}. For  \textcircled{1} and \textcircled{2}, the conditions are abstracted successfully. As for \textcircled{3}, the jumping action \texttt{bindService} is directly contained by \texttt{onResume}, which indicates \textcircled{3} is an \textit{FP}. The reason is that the back traversal of AndroChecker can not correctly identify the loop structure. In detail, AndroChecker would treat \texttt{while()\{\} bindService;} as \texttt{while()\{bindService;\}}. Currently, in the byte codes generated by AndroGuard, distinguishing the two structures is intractable. This is also a critical improvement of future direction.
+\texttt{Task.Status.PENDING)}; \textcircled{3} \textit{FP}. For  \textcircled{1} and \textcircled{2}, the conditions are abstracted successfully. As for \textcircled{3}, the jumping action \texttt{bindService} is directly contained by \texttt{onResume}, which indicates \textcircled{3} is an \textit{FP}. The reason is that the back traversal of AndroChecker can not correctly identify the loop structure. In detail, AndroChecker would treat \texttt{while()\{\} bindService;} as \texttt{while()\{bindService;\}}. Currently, in the codes generated by AndroGuard, distinguishing the two structures is intractable. This is also an improvement of future direction.
 
 \subsubsection{MyTracks}
 \textit{MyTracks} helps travellers to look for a way to keep track of places that they have already been to. 
@@ -161,7 +161,7 @@ The \textit{PSC}  \textcircled{1} and \textcircled{3} are successfully detected 
   
 
 \section{Conclusion}
-We proposed GPC, a generic representation with fine-grained path information, and developed algorithms for its construction and traversal. We described our proof-of-concept builder AndroChecker and presented the evaluation results on real apps. The results showed that AndroChecker can efficiently construct the expected GPC model in a fully automated way. 
+Prior work targeting at constructing control-flow based model in Android provides limited benefit when applied to real system. Under this observation, we proposed GPC, a generic representation with fine-grained path information, and developed algorithms for its construction and traversal. We described our proof-of-concept builder AndroChecker and presented the evaluation results on real apps. The results showed that AndroChecker can efficiently construct the expected GPC model in a fully automated way. 
 
 
 
