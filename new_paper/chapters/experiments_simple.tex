@@ -81,63 +81,72 @@ Column \textit{PSI} shows the result of path-sensitive conditions. We present th
 
 We omit the results of marked edges (mentioned in Section \ref{jumpConfusion}) since they are the same as $E_{j-a}$. Column \textit{Time} shows the time cost of our approach. It includes two parts: parsing time (\textit{PT}) and modelling time (\textit{MT}). Since AndroChecker is to handle \textit{apk} file, the process of reverse engineering consumes significant time cost. Yet this part of work is done by AndroGuard, which is not our contribution. On the whole, the number of \textit{PT} and \textit{MT} are related to the components' size. 
 
-\begin{table*}[!t]
+\begin{table}[!t]
 \centering
 \begin{threeparttable}[b]
 \caption{Example path sensitive conditions in studied cases. } 
 \newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
 \footnotesize
 
-\begin{tabular}{|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|}
 \hline 
-Name &  PSC & Num & TranToJAVA & FP\\
+Name &  PSC(smali) & N & F\\
 \hline 
 \hline 
-\multirow{6}{*}{Beem }& \multirow{2}{6.3cm}{if-eq\{SharedPreferences;$\rightarrow$getBoolean (String;Z)Z, 
-String;$\rightarrow$equals(PARA;)Z\} } & \multirow{2}{*}{2} & \multirow{2}{4cm}{if(SharedPreferences.getBoolean(String b, True) \&\& b.equals(PARA))} & \multirow{2}{*}{0}\\
-&&&&\\
-\cline{2-5}
- & \multirow{2}{6.3cm}{if-eq\{AsyncTask;$\rightarrow$getStatus()AsyncTask \$Status;,GLOBAL\}}  &\multirow{2}{*}{1} & \multirow{2}{*}{if(AsyncTask.getStatus==GLOBAL)}& \multirow{2}{*}{0}\\
+\multirow{6}{0.8cm}{Beem }& \multirow{2}{5.8cm}{if-eq\{SharedPreferences;$\rightarrow$getBoolean (String;Z)Z, 
+String;$\rightarrow$equals(PARA;)Z\} } & \multirow{2}{*}{2}  & \multirow{2}{*}{0}\\
+&&&\\
+\cline{2-4}
+ & \multirow{2}{5.8cm}{if-eq\{AsyncTask;$\rightarrow$getStatus()AsyncTask \$Status;,GLOBAL\}}  &\multirow{2}{*}{1} & \multirow{2}{*}{0}\\
 
-&&&&\\
- \cline{2-5}
-  & \multirow{2}{6.3cm}{if-eq\{ChangeStatus;$\rightarrow$access\$1400(ChangeStatus;) Landroid/widget/Button;\}}  & \multirow{2}{*}{1} & \multirow{2}{*}{if(SharedPreferences.getBoolean()}& \multirow{2}{*}{1}\\
-  &&&&\\
+&&&\\
+ \cline{2-4}
+  & \multirow{2}{5.8cm}{if-eq\{ChangeStatus;$\rightarrow$access\$1400(ChangeStatus;) Landroid/widget/Button;\}} &\multirow{2}{*}{1} & \multirow{2}{*}{1}\\
+  &&&\\
 \hline 
-\multirow{2}{*}{MyTracks}  &if-eq\{Utilities;$\rightarrow$isGpsOn(Context;)Z\} & 2 &if(Utilities.isGpsOn) & 1\\
-\cline{2-5} 
- &if-ne\{GooglePlayServicesUtil;$\rightarrow$a(Context; I)String;\} & 1 & if(GooglePlayServicesUtil.a) & 0\\
+\multirow{2}{0.8cm}{My- Tracks}  &if-eq\{Utilities;$\rightarrow$isGpsOn(Context;)Z\} & 2 &1\\
+\cline{2-4} 
+ &if-ne\{GooglePlayServicesUtil;$\rightarrow$a(Context; I)String;\} & 1 & 0\\
 \hline 
-\multirow{3}{*}{OpenSudoku}  & if-ne\{InputMethod;$\rightarrow$isInputMethodViewCreated()Z'\}  & 1& if(!InputMethod.isInputMethodViewCreated())& 0\\
-\cline{2-5}
-  & if-eq \{File;$\rightarrow$isDirectory()Z, File;$\rightarrow$isFile()Z\} &1& if(File.isDirectory() \&\& File.isFile()) & 1\\
-\cline{2-5}
-   & if-ne \{Iterator;$\rightarrow$hasNext()Z\}& 4& if(!Iterator.hasNext())  & 0\\
+\multirow{3}{0.8cm}{Open- Sudoku}  & if-ne\{InputMethod;$\rightarrow$isInputMethodViewCreated()Z'\}  & 1&  0\\
+\cline{2-4}
+ & if-eq \{File;$\rightarrow$isDirectory()Z, File;$\rightarrow$isFile()Z\} &1&  1\\
+\cline{2-4}
+   & if-ne \{Iterator;$\rightarrow$hasNext()Z\}& 4&  0\\
 \hline 
 \end{tabular}
 %\begin{tablenotes}
-    %\item [1] 
- %  \end{tablenotes}
+%    \item [1] 
+%\end{tablenotes}
 \label{tb2: experiment2}  
 \end{threeparttable}
-\end{table*}
+\end{table}
 
 \subsection{Path Sensitive Conditions (PSC) Discussions}
 
-For further understanding how our modelling supports the \textit{PSC} checking, we study the \textit{PSC} results on three typical apps combined with manual analysis. Table \ref{tb2: experiment2} shows the detailed results, where the column \textit{PSC} represents the simplified \textit{PSC} results; column \textit{Num} shows the times a \textit{PSC} appears;  column \textit{TranToJAVA} presents the translated JAVA code from the \textit{PSC} results; and column \textit{FP} shows the false positive number in \textit{Num}. Due to the limitation of space, we combine the variable defining and using together in \textit{TranToJAVA}. E.g., for \texttt{Object c ; b==c;}, we simplified as \texttt{b==Object c;}. 
+We further manually study the \textit{PSC} results on three typical apps as Table \ref{tb2: experiment2}, where the column \textit{PSC} represents the simplified \textit{PSC} results; column \textit{N} shows the times a \textit{PSC} appears;  
+%column \textit{TranToJAVA} presents the translated JAVA code from the \textit{PSC} results; 
+and column \textit{F} shows the false positive number in \textit{N}. 
+%Due to the limitation of space, we combine the variable defining and using together in \textit{TranToJAVA}. E.g., for \texttt{Object c ; b==c;}, we simplified as \texttt{b==Object c;}. 
 
 \subsubsection{Beem}
-\textit{Beem} provides a full featured and easy to use XMPP client on Android. As shown in Table \ref{tb2: experiment1}, app \textit{Beem} contains four \textit{PSC}s. Three of them are designed to constrain unregister actions (Definition 2), and the last one is used to constrain jumping actions (Definition 2). The unregister and jumping actions include \texttt{Button.setOnClickListener}, \texttt{View.setOnCreateContextMenuListener} and \texttt{Context.bindService}. To verify the results in Table \ref{tb2: experiment2}, we conduct a manual analysis.  After that, the real conditions can be concluded as follows: \textcircled{1} \texttt{if ( SharedPreferences paramSharedPreferences.getBoolean("use\_auto\_awa}  \\
+\textit{Beem} provides a full featured and easy to use XMPP client on Android. As shown in Table \ref{tb2: experiment1}, app \textit{Beem} contains four \textit{PSC}s.
+% Three of them are designed to constrain unregister actions (Definition 2), and the last one is used to constrain jumping actions (Definition 2). The unregister and jumping actions include \texttt{Button.setOnClickListener}, \texttt{View.setOnCreateContextMenuListener} and \texttt{Context.bindService}. 
+The real conditions can be concluded as follows: \textcircled{1} \texttt{if ( SharedPreferences paramSharedPreferences.getBoolean("use\_auto\_awa}  \\
 \texttt{y", false) \&\& "use\_auto\_away".equals(paramStrin}\\
 \texttt{g) )}; \textcircled{2} \texttt{if(LoginAnim.this.mTask.getStatus()==Async}\\
 \texttt{Task.Status.PENDING)}; \textcircled{3} \textit{FP}. For  \textcircled{1} and \textcircled{2}, the conditions are abstracted successfully. As for \textcircled{3}, the jumping action \texttt{bindService} is directly contained by \texttt{onResume}, which indicates \textcircled{3} is an \textit{FP}. The reason is that the back traversal of AndroChecker can not correctly identify the loop structure. In detail, AndroChecker would treat \texttt{while()\{\} bindService;} as \texttt{while()\{bindService;\}}. Currently, in the byte codes generated by AndroGuard, distinguishing the two structures is intractable. This is also a critical improvement of future direction.
 
 \subsubsection{MyTracks}
-\textit{MyTracks} helps travellers to look for a way to keep track of places that they have already been to. Three \textit{PSC}s are detected in \textit{MyTracks}.  All the \textit{PSC}s are designed to constrain register actions. The register actions include \texttt{LocationManager.requestLocationUpdates } and \texttt{Button.setOnClickListener}. By manual analysis, the real \textit{PSC}s can be abstracted as  \textcircled{1} \texttt{if(Utilities.isGpsOn(getApplicationContext()))}, \textcircled{2} \textit{FP}, \textcircled{3} \texttt{if (GooglePlayServicesUtil.a(localContext,}\\
+\textit{MyTracks} helps travellers to look for a way to keep track of places that they have already been to. 
+%Three \textit{PSC}s are detected in \textit{MyTracks}.  All the \textit{PSC}s are designed to constrain register actions. The register actions include \texttt{LocationManager.requestLocationUpdates } and \texttt{Button.setOnClickListener}. 
+By manual analysis, the real \textit{PSC}s can be abstracted as  \textcircled{1} \texttt{if(Utilities.isGpsOn(getApplicationContext()))}, \textcircled{2} \textit{FP}, \textcircled{3} \texttt{if (GooglePlayServicesUtil.a(localContext,}\\
  \texttt{i).str1!=null)}. For  \textcircled{1} the real \textit{PSC} is successfully matched as Table \ref{tb2: experiment2}. For \textcircled{2} the register action is directly contained by \textit{onCreate}, and the reason of \textit{FP} is the same as \textit{Beem}. For \textcircled{3}, the PSC abstracted by our approach lacks the variable \textit{str1}. This is because \textit{str1} is an attribute of \textit{GooglePlayServicesUtil.a},  which can not be recognized by AndroChecker.
 
 \subsubsection{OpenSudoku}
-\textit{OpenSudoku} is an open source sudoku game. AndroChecker detects six \textit{PSC}s in \textit{OpenSudoku}. Five of them are designed to constrain register actions, and the last one is designed to constrain jumping actions. The register and jumping actions contain \texttt{Button.setOnClickListener} and \texttt{Context.startActivity}. Through manual analysis, the real \textit{PSC}s can be abstracted as  \textcircled{1} \texttt{if(!(InputMethod).isInputMethodViewCreated())}, \textcircled{2} \textit{FP}, \textcircled{3} \texttt{if(!Iterator.hasNext())}.
+\textit{OpenSudoku} is an open source sudoku game. AndroChecker detects six \textit{PSC}s in \textit{OpenSudoku}.
+% Five of them are designed to constrain register actions, and the last one is designed to constrain jumping actions. The register and jumping actions contain \texttt{Button.setOnClickListener} and \texttt{Context.startActivity}. 
+Through manual analysis, the real \textit{PSC}s can be abstracted as  \textcircled{1} \texttt{if(!(InputMethod).isInputMethodViewCreated())}, \textcircled{2} \textit{FP}, \textcircled{3} \texttt{if(!Iterator.hasNext())}.
 The \textit{PSC}  \textcircled{1} and \textcircled{3} are successfully detected by AndroChecker, and they have the same semantic with the corresponding items in Table \ref{tb2: experiment2}. As \textit{MyTracks} and \textit{Beem}, the \textit{FP} occurs because the loop obstacle.
 
 
@@ -151,7 +160,8 @@ The \textit{PSC}  \textcircled{1} and \textcircled{3} are successfully detected 
 %In its ten activities, seven of them contains register actions, and six of them contains jumping actions.  As shown in Table \ref{tb2: experiment1}, AndroChecker checks six valid path sensitive conditions. Four \textit{PSC}s are contained in class \texttt{IMPopupDialog}, and one condition is in class \texttt{IMControlPanelActivity}. The register actions of these five are \texttt{Button.setOnClickListener}s. The rest one is in \texttt{FileListActivity\$3}, whose register action is inter component jumping \texttt{startActivity}. Table ** shows the typical example for one of the \texttt{setOnClickListener}. The shown condition means the register action is under the condition of "if "
   
 
-
+\section{Conclusion}
+We proposed GPC, a generic representation with fine-grained path information, and developed algorithms for its construction and traversal. We described our proof-of-concept builder AndroChecker and presented the evaluation results on real apps. The results showed that AndroChecker can efficiently construct the expected GPC model in a fully automated way. 
 
 
 

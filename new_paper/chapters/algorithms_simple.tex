@@ -14,58 +14,71 @@
 %  \label{fig:motivationGPC}  
 %\end{figure}
 
-\begin{table*}[!t]
-\centering
-\begin{threeparttable}[b]
-\caption{Path-sensitive conditions for motivation example. } 
-\newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
-\small
-\begin{tabular}{|c|c|c|c|c|}
-\hline 
-Node & Connection & ConType & Condition & Event\\ 
-\hline 
-\hline 
-this.onCreate & \$1$::$onClick & FRA & N/A & env:(user,click,NeutralButton) \\ 
-\hline 
-this.onCreate & \$2$::$onClick & FRA & N/A & env:(user,click,PositiveButton) \\ 
-\hline 
-this.onCreate & \$3$::$onClick & FRA & N/A & env:(user,click,NegativeButton) \\ 
-\hline 
-this.onResume & this.onLocationChanged & FRA & \tabincell{c}{con:((v1 \&\& !v2)$\parallel$ \\
-(v1 \&\& !v3))} &  env:(sys,locationChanged,locationManager)\\
+%\begin{table}[!t]
+%\centering
+%\begin{threeparttable}[b]
+%\caption{Path-sensitive conditions for motivation example. } 
+%\newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
+%\small
+%\begin{tabular}{|c|c|c|c|}
+%\hline 
+%Node & Connection & ConType & Condition \\ 
+%\hline 
+%\hline 
+%this.onCreate & \$1$::$onClick & FRA & N/A  \\ 
+%\hline 
+%this.onCreate & \$2$::$onClick & FRA & N/A  \\ 
+%\hline 
+%this.onCreate & \$3$::$onClick & FRA & N/A  \\ 
+%\hline 
+%this.onResume & this.onLocationChanged & FRA & \tabincell{c}{con:((v1 \&\& !v2)$\parallel$ \\
+%(v1 \&\& !v3))}\\
+%
+%\hline 
+%this.onPause & this.onLocationChanged & BRA & N/A \\ 
+%\hline 
+%this.onLocationChanged & this.onLocationChanged & BRA  & N/A \\ 
+%\hline 
+%\$1$::$onClick & option$::$onCreate & FJA  & N/A \\ 
+%\hline 
+%\$2$::$onClick & share$::$onCreate & FJA  & N/A \\ 
+%\hline 
+%\end{tabular}
+%\begin{tablenotes}
 
-\hline 
-this.onPause & this.onLocationChanged & BRA & N/A & N/A \\ 
-\hline 
-this.onLocationChanged & this.onLocationChanged & BRA  & N/A & N/A \\ 
-\hline 
-\$1$::$onClick & option$::$onCreate & FJA  & N/A & N/A \\ 
-\hline 
-\$2$::$onClick & share$::$onCreate & FJA  & N/A & N/A \\ 
-\hline 
-\end{tabular}
-\begin{tablenotes}
-    \item [1] The signs \textit{v1}, \textit{v2} and \textit{v3} in column \textit{Condition} respectively refer to the variables \textit{containsGPS}, \textit{forceNetwork} and \textit{containsNetwork}
-   \end{tablenotes}
-\label{tbl: sensCond}  
-\end{threeparttable}
-\end{table*}
+
+%    \item [1] The signs \textit{v1}, \textit{v2} and \textit{v3} in column \textit{Condition} respectively refer to the variables \textit{containsGPS}, \textit{forceNetwork} and \textit{containsNetwork}
+%   \end{tablenotes}
+%\label{tbl: sensCond}  
+%\end{threeparttable}
+%\end{table}
 In this section, we introduce the \textit{GPC} construction algorithms, %Figure \ref{fig:motivationGPC} describes the \textit{GPC} model for the motivation example. 
-including the following four stages.
+which includes four stages. A typical \textit{GPC} model is shown in Figure \ref{fig:motivationGPC} \footnote{fdsfa}. 
+\begin{figure}[htbp]  
+  \centering  
+  \includegraphics[width=1\linewidth]{pic/motivationGPM.pdf}  
+  \caption{GPC model illustration for motivation example.}  
+  \label{fig:motivationGPC}  
+\end{figure}
 %: 1) constructing path-insensitive inner component model, 2) constructing inter-component model, 3) constructing path-sensitive model and 4) handling fine-grained flow. %Correspondingly in Figure \ref{fig:motivationGPC} and Table \ref{tbl: sensCond}, the construction stages can be clearly mapped as: 1) constructing all the nodes and black edges; 2) constructing the blue edges; 3) obtaining the \textit{Conditions} column in Table \ref{tbl: sensCond}; 4) building the order numbers on Figure \ref{fig:motivationGPC}'s edges. Our approach is based on static analysis techniques. The input of our analysis algorithm is the app byte codes via reverse engineering. The output is the generated \textit{GPC} model, including the set of nodes, edges and conditions. Related conceptions have already been defined in Section \ref{transition-model}. 
 %A conditionEdge can be a ordinary edge or the edge with trigger conditions that contains two parts: register conditions and trigger events.
 
 \subsection{Path-insensitive Inner Component Model (\textit{PII})}
 In this stage, we present a process\textit{ConsPII}. Taking the source code of a target component as its input, the process 
-outputs a path-insensitive model for the component, including valid nodes (set \textit{N}) and edges between the nodes ($E_{l} \cup E_{r}$ -- lifecycle edges $E_l$ and register edges $E_r$).
+outputs a path-insensitive model for the component, including valid nodes (set \textit{N}) and edges between the nodes ($E_{l} \cup E_{r}$, in which $E_l$ is the edges connecting two lifecycle nodes,and $E_r$ is the edges produced by callback registering, e.g., View.setOnClickListener, SensorManager.registerListener,etc.).
 %thow to construct the set of valid nodes \textit{N} and the set of edges $E_{l} \cup E_{r}$ (lifecycle and register edges) in each component. We call this process \textit{ConsPII}. As an improved static analysis, the algorithm takes the source code of the target component as its input. The output of \textit{ConsPII} is a path-insensitive model for target component, including valid nodes and edges. Since the set of nodes \textit{N} can be easily identified by matching pre-defined regular expression, \textit{ConsPII} focuses on constructing valid edges, namely the lifecycle edges $E_{l}$ and the register edges $E_{r}$.  
 
 The nodes in \textit{N} are identified by matching pre-defined regular expression.
-To compute $E_{l}$, \textit{ConsPII} first initializes an entire lifecycle graph (\textit{ELG}) in accordance with the type of the given component. Then, three \textit{auxiliary nodes} (\textit{onActiveStart}, \textit{onActiveEnd} and \textit{onTerminal}) are created and added into the ELG. They are used to explicitly mark the component status. \textit{ConsPII} then identifies the implemented lifecycle callback in the given component. For the nodes in the \textit{ELG} that are not implemented in the component, \textit{ConsPII} employs a displacement algorithm in the ELG, which involves three steps: 1) checking the pre-nodes and post-nodes of the unimplemented nodes, 2) generating edges connecting each pre-node with each post-node, 3) removing the unimplemented and its related edges. After the displacement, the $E_{l}$ is obtained from the remaining edges of ELG. 
+To compute $E_{l}$, \textit{ConsPII} first initializes an entire lifecycle graph (\textit{ELG}) in accordance with the type of the given component. 
+%Then, three \textit{auxiliary nodes} (\textit{onActiveStart}, \textit{onActiveEnd} and \textit{onTerminal}) are created and added into the ELG. They are used to explicitly mark the component status. Then identifies the implemented lifecycle callback in the given component. 
+For the nodes in the \textit{ELG} that are not implemented in target component, \textit{ConsPII} employs a displacement algorithm to remove them.
+
+% which involves three steps: 1) checking the pre-nodes and post-nodes of the unimplemented nodes, 2) generating edges connecting each pre-node with each post-node, 3) removing the unimplemented and its related edges. After the displacement, the $E_{l}$ is obtained from the remaining edges of ELG. 
 
 %The $E_{r}$ are generated via identification of (un)register abstractions (\textit{RA}, defined in Section \ref{transition-model}).
-To identify the edges in $E_r$, the \textit{ConsPII} process first identify a set of register actions $\mathit{FRA}$, each of which contains the invoker, invokee and the object conducting the (un)register action, then adopts an improved \textit{DFS} (Deep First Search) algorithm over the entire program. The traversal process starts with \texttt{onCreate} callback in the launcher activity. For each identified register action $\mathit{fra}\in \mathit{FRA}$, the invokee callback \textit{ive} is considered as a new node and is inserted into \textit{active area} -- a lifecycle interval where the non-lifecycle callbacks are normally invoked. The \textit{active area} is
-located between two auxiliary nodes: \textit{onActiveStart} and \textit{onActiveEnd}. It is defined for addressing the conflicts between lifecycle and non-lifecycle callbacks. There are two types of connections between lifecycle and non-lifecycle callbacks: \textit{lifecycle} $\rightarrow $ \textit{non-lifecycle} and \textit{non-lifecycle} $\rightarrow $ \textit{non-lifecycle}. The former generates edges \textit{onActiveStart} $\rightarrow $ \textit{ive} $\rightarrow $ \textit{onActiveEnd}; and the latter generates edges \textit{ivr} $\rightarrow $ \textit{ive} $\rightarrow $ \textit{onActiveEnd}, where \textit{ivr} is the invoker in a register action. %The black arrows and all the nodes in Figure \ref{fig:motivationGPC} are generated by \textit{ConsPII}. Note that in the figure, the \textit{onCreateDialog} is substituted by the \textit{onCreate}, since \texttt{onCreateDialog} is always invoked along with \textit{onCreate}, and thus can be treated as a part of it.
+To identify the edges in $E_r$, the \textit{ConsPII} process first identify a set of register actions $\mathit{FRA}$, each of which contains the invoker, invokee and the object conducting the (un)register action, then adopts an improved \textit{DFS} (Deep First Search) algorithm over the entire program. The traversal process starts with \texttt{onCreate} callback in the launcher activity. For each identified register action, the invokee callback \textit{ive} is inserted \textit{active area} -- a lifecycle interval where the non-lifecycle callbacks are normally invoked, as a new node. 
+%The \textit{active area} is located between two auxiliary nodes: \textit{onActiveStart} and \textit{onActiveEnd}. It is defined for addressing the conflicts between lifecycle and non-lifecycle callbacks. 
+There are two types of connections between lifecycle and non-lifecycle callbacks: \textit{lifecycle} $\rightarrow $ \textit{non-lifecycle} and \textit{non-lifecycle} $\rightarrow $ \textit{non-lifecycle}. The former generates edges \textit{onActiveStart} $\rightarrow $ \textit{ive} $\rightarrow $ \textit{onActiveEnd}; and the latter generates edges \textit{ivr} $\rightarrow $ \textit{ive} $\rightarrow $ \textit{onActiveEnd}, where \textit{ivr} is the invoker in a register action. %The black arrows and all the nodes in Figure \ref{fig:motivationGPC} are generated by \textit{ConsPII}. Note that in the figure, the \textit{onCreateDialog} is substituted by the \textit{onCreate}, since \texttt{onCreateDialog} is always invoked along with \textit{onCreate}, and thus can be treated as a part of it.
 
 %\begin{algorithm}[!t]
 %\caption{Connection between Components}
