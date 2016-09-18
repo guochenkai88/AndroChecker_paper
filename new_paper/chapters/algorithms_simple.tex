@@ -52,14 +52,14 @@
 %\label{tbl: sensCond}  
 %\end{threeparttable}
 %\end{table}
-In this section, we introduce the \textit{GPC} construction algorithms, using an example shown in Figure~\ref{fig:1} and Figure~\ref{fig:motivationGPC}. 
+In this section, we introduce the \textit{GPC} construction algorithms, using an example shown in Figure \ref{fig:1} and Figure~\ref{fig:motivationGPC}. 
 %Figure \ref{fig:motivationGPC} describes the \textit{GPC} model for the motivation example. 
 The algorithm includes the following four stages. %For clarifying the process, a typical \textit{GPC} model is shown in Figure \ref{fig:motivationGPC}. %\footnote{The example code can be seen in https://github.com/guochenkai88/\\AndroChecker\_paper/blob/master/Motivating.md}. 
 %\begin{figure*}[!t]   
   \begin{figure}[!t]%{0.45\textwidth}
   \centering  
   \includegraphics[width=0.65\linewidth]{pic/motivation1.pdf}  
-  \caption{Motivating example derived from ShareMyPosition~\cite{newShareMyPosition}.}  
+  \caption{Motivating example derived from ShareMyPosition \cite{newShareMyPosition}.}  
   \label{fig:1}  
   \end{figure} 
   \begin{figure}[t]%{0.45\textwidth}
@@ -77,7 +77,7 @@ The algorithm includes the following four stages. %For clarifying the process, a
 Taking the source code of a target component as input, the \textit{PII} constructing process \textit{ConsPII} 
 outputs a path-insensitive model for the component, including valid nodes (set \textit{N}) and edges between the nodes ($E_{l} \cup E_{r}$, $E_l$ contains the edges connecting two lifecycle nodes, and $E_r$ contains the edges produced by callback registering).
 %, e.g., View.setOnClickListener, SensorManager.registerListener, etc.
-For example, taking the source code in Figure~\ref{fig:1} as input, \textit{ConsPII} generates the black arrows and all the nodes in Figure \ref{fig:motivationGPC}. 
+For example, taking the source code in Figure \ref{fig:1} as input, \textit{ConsPII} generates the black arrows and all the nodes in Figure \ref{fig:motivationGPC}. 
 
 %Note that in the figure, the \textit{onCreateDialog} is substituted by the \textit{onCreate}, since \texttt{onCreateDialog} is always invoked along with \textit{onCreate}, and thus can be treated as a part of it.
 
